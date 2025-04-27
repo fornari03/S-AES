@@ -1,12 +1,13 @@
-from utils import string_to_binary_string
+from utils import string_to_binary_string, binary_string_to_nibble_matrix
+from key_expansion import keyExpansion
 
 message = input()
 message = string_to_binary_string(message)
+message = binary_string_to_nibble_matrix(message)
 
-key = 0xABCD # chave de 16 bits
-print(key)
+key = [0xA, 0xB, 0xC, 0xD] # chave de 16 bits em 4 nibbles
 
-# keys = keyExpansion(key)
+keys = keyExpansion(key)
 
 # addRoundKey(message, keys[0])
 
