@@ -7,11 +7,15 @@ def keyExpansion(key):
     w1 = [key[2], key[3]]
     
     round = 1
-    w2 = [w0[i] ^ g(w1, round)[i] for i in range(2)]
+    gw1 = g(w1, round)
+
+    w2 = [w0[i] ^ gw1[i] for i in range(2)]
     w3 = [w2[i] ^ w1[i] for i in range(2)]
 
     round = 2
-    w4 = [w2[i] ^ g(w3, round)[i] for i in range(2)]
+    gw3 = g(w3, round)
+
+    w4 = [w2[i] ^ gw3[i] for i in range(2)]
     w5 = [w4[i] ^ w3[i] for i in range(2)]
 
 
