@@ -1,3 +1,6 @@
+from utils import print_ret
+
+@print_ret
 def addRoundKey(state, nibble_matrix_key):
     for i in range(2):
         for j in range(2):
