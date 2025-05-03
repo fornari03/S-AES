@@ -45,8 +45,8 @@ def print_ret(func):
 def print_matrix(matrix):
     for row in matrix:
         row = [int_to_hex(num) for num in row]
-        print(f"[{', '.join(row)}]")
-    print()
+        print(f"{'  '.join(row)}")
+    print("-" * 50)
 
 def int_to_hex(n):
     # converte um inteiro em uma string hexadecimal

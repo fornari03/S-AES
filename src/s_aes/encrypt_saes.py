@@ -1,4 +1,4 @@
-from utils import string_to_binary_string, binary_string_to_nibble_matrix, nibble_matrix_to_binary_string, binary_string_to_base64, binary_string_to_hex
+from utils import string_to_binary_string, binary_string_to_nibble_matrix, nibble_matrix_to_binary_string, binary_string_to_base64, binary_string_to_hex, int_to_hex
 from key_expansion import keyExpansion
 from add_round_key import addRoundKey
 from substitute_nibbles import substituteNibbles
@@ -10,17 +10,21 @@ def encrypt_saes(message, key):
 
     message = string_to_binary_string(message)
     in_matrix = binary_string_to_nibble_matrix(message)
+    print("-" * 50)
     print(f"Início: {in_matrix}")
+    print("-" * 50)
 
     round_keys = keyExpansion(key)
     print(f"Chave expandidas:")
     for i in range(len(round_keys)):
         print(f"w{i}: {round_keys[i]}")
-    print()
+    print("-" * 50)
 
     state = addRoundKey(in_matrix, round_keys[0:2]) # w0 e w1
 
     # primeira rodada:
+    print("Primeira rodada:")
+    
     state = substituteNibbles(state)
 
     state = shiftRows(state)
@@ -30,6 +34,8 @@ def encrypt_saes(message, key):
     state = addRoundKey(state, round_keys[2:4]) # w2 e w3
 
     # segunda rodada:
+    print("Segunda rodada:")
+
     state = substituteNibbles(state)
 
     state = shiftRows(state)
@@ -39,7 +45,9 @@ def encrypt_saes(message, key):
 
     print("Matriz de saída:")
     for row in out_matrix:
-        print(row)
+        row = [int_to_hex(num) for num in row]
+        print(f"{'  '.join(row)}")
+    print("-" * 50)
 
     cipher_text = nibble_matrix_to_binary_string(out_matrix)
     cipher_text_spaced = ' '.join(cipher_text[i:i+4] for i in range(0, len(cipher_text), 4))
