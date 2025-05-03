@@ -1,19 +1,19 @@
 import base64
 
 
-def string_to_binary_string(msg):
-    bin_str = ''.join(format(ord(i), '08b') for i in msg)
-    if len(bin_str) < 16:
-        return bin_str.ljust(16, '0')  # padding com 0s
-    elif len(bin_str) > 16:
-        return bin_str[:16]  # corta se passar
-    return bin_str
+def string_to_binary_number(message):
+    binary_str = ''.join(format(ord(c), '08b') for c in message)
+    return int(binary_str, 2)
 
 
-def binary_string_to_nibble_matrix(bin_str):
-    # converte a string binária em uma matriz de nibbles
-    nibbles = [int(bin_str[i:i+4], 2) for i in range(0, 16, 4)]
-    return [[nibbles[0], nibbles[2]], [nibbles[1], nibbles[3]]]
+def binary_to_nibble_matrix(binary_number):
+    # converte um número binário em uma matriz de nibbles
+    binary_str = format(binary_number, '08b')
+    padding = 8 - len(binary_str) % 8
+    binary_str = binary_str.zfill(len(binary_str)+padding)
+    nibbles = [int(binary_str[i:i + 4], 2) for i in range(0, len(binary_str), 4)]
+    matrix = [[nibbles[0], nibbles[2]], [nibbles[1], nibbles[3]]]
+    return matrix
 
 
 def nibble_matrix_to_binary_string(matrix):
