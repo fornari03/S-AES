@@ -27,11 +27,11 @@ def binary_string_to_base64(bin_str):
     b64_str = base64.b64encode(n.to_bytes((n.bit_length() + 7) // 8, 'big')).decode()
     return b64_str
 
-def binary_string_to_hex(bin_str):
+def binary_string_to_hex(bin_str, padding=4):
     # converte a string binária em uma string hexadecimal
     n = int(bin_str, 2)
     hex_str = hex(n)[2:].upper()
-    return hex_str.zfill(4)  # preenche com zeros à esquerda para garantir 4 dígitos
+    return hex_str.zfill(padding)  # preenche com zeros à esquerda (padding)
 
 
 def print_ret(func):
