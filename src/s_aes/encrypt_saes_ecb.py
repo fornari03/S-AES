@@ -20,7 +20,7 @@ def encrypt_saes_ecb(message, key):
 
     # print(f"Texto cifrado em binário: {encrypted_binary}")
     
-    print(f"Texto cifrado em hexadecimal: 0x{binary_string_to_hex(encrypted_binary, 8)}")
+    print(f"Texto cifrado em hexadecimal: 0x{binary_string_to_hex(encrypted_binary, len(blocks) * 4)}")
 
 
     return binary_string_to_base64(encrypted_binary)
