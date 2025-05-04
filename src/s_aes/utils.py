@@ -3,7 +3,7 @@ import base64
 
 def string_to_binary_number(message):
     binary_str = ''.join(format(ord(c), '08b') for c in message)
-    return int(binary_str, 2)
+    return int(binary_str, 2) # retorna o binário
 
 
 def binary_to_nibble_matrix(binary_number):
@@ -12,7 +12,7 @@ def binary_to_nibble_matrix(binary_number):
     padding = 8 - len(binary_str) % 8
     binary_str = binary_str.zfill(len(binary_str)+padding)
     nibbles = [int(binary_str[i:i + 4], 2) for i in range(0, len(binary_str), 4)]
-    matrix = [[nibbles[0], nibbles[2]], [nibbles[1], nibbles[3]]]
+    matrix = [[nibbles[0], nibbles[2]], [nibbles[1], nibbles[3]]] # garante a ordem correta
     return matrix
 
 
@@ -35,6 +35,7 @@ def binary_string_to_hex(bin_str, padding=4):
 
 
 def print_ret(func):
+    # decorator para imprimir o estado da matriz após cada operação
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
         print(f"Estado após '{func.__name__}':")
@@ -43,6 +44,7 @@ def print_ret(func):
     return wrapper
 
 def print_matrix(matrix):
+    # faz o print da matriz de estado
     for row in matrix:
         row = [int_to_hex(num) for num in row]
         print(f"{'  '.join(row)}")

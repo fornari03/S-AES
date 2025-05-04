@@ -13,7 +13,7 @@ def encrypt_saes_ecb(message, key):
     encrypted_binary = ""
     for block in blocks:
         ciphertext_block = encrypt_saes(block, key)
-        encrypted_binary += ciphertext_block
+        encrypted_binary += ciphertext_block # concatena o bloco cifrado ao resultado
 
     print("-" * 50)
     print("\nTexto encriptado com S-AES em ECB:")
@@ -30,6 +30,7 @@ def encrypt_saes_ecb(message, key):
 message = input("Digite a mensagem a ser cifrada: ")
 
 key = input("Digite a chave em hexadecimal (e.g.: 0xA73B): ")
+# faz o tratamento da chave
 key = ["0x"+key[i] for i in range(2, len(key))]
 key = [int(k, 16) for k in key]
 

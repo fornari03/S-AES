@@ -9,12 +9,14 @@ def keyExpansion(key):
     round = 1
     gw1 = g(w1, round)
 
+    # faz o XOR entre w0 e g(w1) e entre w2 e w1
     w2 = [w0[i] ^ gw1[i] for i in range(2)]
     w3 = [w2[i] ^ w1[i] for i in range(2)]
 
     round = 2
     gw3 = g(w3, round)
 
+    # faz o XOR entre w2 e g(w3) e entre w4 e w3
     w4 = [w2[i] ^ gw3[i] for i in range(2)]
     w5 = [w4[i] ^ w3[i] for i in range(2)]
 

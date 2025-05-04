@@ -7,6 +7,7 @@ def mixColumns(state):
     result = [[0, 0], [0, 0]]
     for i in range(2):
         for j in range(2):
+            # faz a multiplicação no campo de Galois, elemento a elemento
             result[i][j] = galois_mult(mix_matrix[i][0], state[0][j]) ^ galois_mult(mix_matrix[i][1], state[1][j])
     return result
 
@@ -15,7 +16,7 @@ def galois_mult(a, b):
     result = 0
 
     for i in range(4):
-        # Se o bit menos significativo de b for 1, fazemos XOR do acumulador com 'a'
+        # se o LSB de 'b' for 1, fazemos XOR do acumulador com 'a'
         if b & 1: 
             result ^= a
 
