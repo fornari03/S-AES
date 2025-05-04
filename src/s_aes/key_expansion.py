@@ -19,7 +19,7 @@ def keyExpansion(key):
     w5 = [w4[i] ^ w3[i] for i in range(2)]
 
 
-    return [w0, w1, w2, w3, w4, w5]
+    return [[w0, w1], [w2, w3], [w4, w5]]
 
 
 def g(w, round_number):
@@ -29,7 +29,7 @@ def g(w, round_number):
     # aplica S-box
     w = [SBOX[n] for n in w]
 
-    # XOR com rcon
+    # XOR com a constante de rodada
     for i in range(2):
         w[i] = w[i] ^ ROUND_CONST[round_number-1][i]
 

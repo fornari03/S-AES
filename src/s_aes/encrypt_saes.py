@@ -24,7 +24,7 @@ def encrypt_saes(message, key):
     print("-" * 50)
 
 
-    round_keys = keyExpansion(key) # retorna as 6 chaves em duplas de nibbles
+    round_keys = keyExpansion(key) # retorna as 3 subchaves em matrizes 2x2 de nibbles
 
     # mostra as chaves expandidas
     print(f"Chave expandidas:")
@@ -34,7 +34,7 @@ def encrypt_saes(message, key):
 
 
 
-    state = addRoundKey(in_matrix, round_keys[0:2]) # w0 e w1
+    state = addRoundKey(in_matrix, round_keys[0]) # w0 e w1
 
     # PRIMEIRA RODADA:
     print("Primeira rodada:")
@@ -45,7 +45,7 @@ def encrypt_saes(message, key):
 
     state = mixColumns(state)
 
-    state = addRoundKey(state, round_keys[2:4]) # w2 e w3
+    state = addRoundKey(state, round_keys[1]) # w2 e w3
 
 
 
@@ -56,7 +56,7 @@ def encrypt_saes(message, key):
 
     state = shiftRows(state)
 
-    out_matrix = addRoundKey(state, round_keys[4:6]) # w4 e w5
+    out_matrix = addRoundKey(state, round_keys[2]) # w4 e w5
 
 
     # mostra a matriz de saída
