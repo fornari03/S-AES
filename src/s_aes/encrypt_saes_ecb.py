@@ -6,9 +6,9 @@ def encrypt_saes_ecb(message, key):
     # divide em blocos de dois caracteres (16 bits)
     blocks = [message[i:i+2] for i in range(0, len(message), 2)]
 
-    # faz padding com 0 no LSB se for menor que 16 bits
+    # faz padding PKCS#7 no LSB se for menor que 16 bits
     if len(blocks[-1]) < 2:
-        blocks[-1] += '0'
+        blocks[-1] += '#' # # para mostrar que é padding (seria util na decriptacao)
 
     encrypted_binary = ""
     for block in blocks:
