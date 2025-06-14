@@ -1,9 +1,11 @@
-from Crypto.Cipher import AES
-from Crypto.Util import Counter
-from Crypto.Random import get_random_bytes
-
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import padding as crypto_padding
+from cryptography.hazmat.primitives.ciphers.modes import CFB, CTR, OFB, CBC, ECB
 import base64
+import os
 import time
+
 
 def padding(text):
     # padding PKCS#7
@@ -11,40 +13,47 @@ def padding(text):
     return text + bytes([padding_len]) * padding_len # esses bytes são o valor do padding_len
 
 def aes_encrypt(message, key, mode):
+    backend = default_backend() # cria o backend para o AES
 
     if mode == 'ECB':
         start = time.time() # inicia o tempo de execução
-        cipher = AES.new(key, AES.MODE_ECB) # cria o objeto AES com a chave e o modo
-        cipher_text = cipher.encrypt(padding(message)) # cifra a mensagem com 
+        cipher = Cipher(algorithms.AES(key), ECB(), backend=backend) # cria o objeto Cipher com a chave, o modo e o backend
+        encryptor = cipher.encryptor() # cria o objeto de encriptação
+        cipher_text = encryptor.update(padding(message)) + encryptor.finalize() # cifra a mensagem com padding
         b64_cipher_text = base64.b64encode(cipher_text).decode() # converte o texto cifrado para base64
 
     elif mode == 'CBC':
         start = time.time()
-        init_vector = get_random_bytes(16) # vetor de inicialização com 16 bytes
-        cipher = AES.new(key, AES.MODE_CBC, init_vector) # cria o objeto AES com a chave, modo e vetor de inicialização
-        cipher_text = cipher.encrypt(padding(message))
+        init_vector = os.urandom(16) # vetor de inicialização com 16 bytes
+        cipher = Cipher(algorithms.AES(key), CBC(init_vector), backend=backend) # cria o objeto Cipher com a chave, o modo e o vetor de inicialização
+        encryptor = cipher.encryptor() # cria o objeto de encriptação
+        cipher_text = encryptor.update(padding(message)) + encryptor.finalize()
         b64_cipher_text = base64.b64encode(init_vector + cipher_text).decode() # concatena o vetor de inicialização com o texto cifrado
 
     elif mode == 'CFB':
         start = time.time()
-        init_vector = get_random_bytes(16)
-        cipher = AES.new(key, AES.MODE_CFB, init_vector)
-        cipher_text = cipher.encrypt(message)
-        b64_cipher_text = base64.b64encode(init_vector + cipher_text).decode()
+        init_vector = os.urandom(16)
+        cipher = Cipher(algorithms.AES(key), CFB(init_vector), backend=backend)
+        encryptor = cipher.encryptor()
+        cipher_text = encryptor.update(message) + encryptor.finalize()
+        b64_cipher_text = base64.b64encode(init_vector + cipher_text).decode() # concatena o vetor de inicialização com o texto cifrado
 
     elif mode == 'OFB':
         start = time.time()
-        init_vector = get_random_bytes(16)
-        cipher = AES.new(key, AES.MODE_OFB, init_vector)
-        cipher_text = cipher.encrypt(message)
-        b64_cipher_text = base64.b64encode(init_vector + cipher_text).decode()
+        nonce = os.urandom(16)
+        cipher = Cipher(algorithms.AES(key), OFB(nonce), backend=backend)
+        encryptor = cipher.encryptor()
+        cipher_text = encryptor.update(message) + encryptor.finalize()
+        b64_cipher_text = base64.b64encode(nonce + cipher_text).decode() # concatena o vetor de inicialização (nonce) com o texto cifrado
 
     elif mode == 'CTR':
         start = time.time()
-        nonce = get_random_bytes(8) # nonce de 8 bytes
-        cipher_textr = Counter.new(64, prefix=nonce) # contador de 64 bits com nonce 
-        cipher = AES.new(key, AES.MODE_CTR, counter=cipher_textr) # cria o objeto AES com a chave, modo e contador
-        cipher_text = cipher.encrypt(message)
+        nonce = os.urandom(8)
+        # cryptography espera um valor inicial de 16 bytes para o modo CTR
+        initial_value = int.from_bytes(nonce + b'\x00' * 8, byteorder='big')
+        cipher = Cipher(algorithms.AES(key), CTR(initial_value.to_bytes(16, 'big')), backend=backend)
+        encryptor = cipher.encryptor()
+        cipher_text = encryptor.update(message) + encryptor.finalize()
         b64_cipher_text = base64.b64encode(nonce + cipher_text).decode() # concatena o nonce com o texto cifrado
 
     end = time.time() # termina o tempo de execução
